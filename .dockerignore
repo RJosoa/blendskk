@@ -1,4 +1,6 @@
-echo "vendor/
+vendor/
+var/
 .git/
 .env.local
-.dockerignore" > .dockerignore
+.env.*.local
+.dockerignore
