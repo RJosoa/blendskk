@@ -5,7 +5,10 @@ services:
       dockerfile: Dockerfile
     container_name: blendsk_app
     volumes:
-      - .:/var/www/blendsk
+      - ./public:/var/www/blendsk/public
+      - ./config:/var/www/blendsk/config
+      - ./src:/var/www/blendsk/src
+      - ./templates:/var/www/blendsk/templates
     ports:
       - "9000:9000"
     depends_on:

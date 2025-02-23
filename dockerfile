@@ -2,27 +2,27 @@ FROM php:8.2-fpm
 
 USER root
 
-# Installer les dépendances système et l'extension pdo_mysql pour Symfony/MySQL
 RUN apt-get update && apt-get install -y \
-    libonig-dev \
-    zip \
-    unzip \
-    git \
- && docker-php-ext-install pdo pdo_mysql
+    libonig-dev libxml2-dev libzip-dev \
+    zip unzip git \
+    && docker-php-ext-install pdo pdo_mysql mbstring xml zip
 
-# Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/blendsk
 
-# Copier le code source dans le conteneur en définissant le propriétaire
-COPY --chown=www-data:www-data . .
+# Étape 1 : Copier uniquement les fichiers nécessaires pour composer install
+COPY composer.json composer.lock symfony.lock ./
 
-# Installer les dépendances PHP/Symfony
-RUN composer install --no-interaction --prefer-dist
+# Étape 2 : Installer les dépendances sans autoloader
+RUN composer install --no-dev --no-autoloader --no-scripts --no-interaction
 
-# Ajuster les permissions
-RUN chmod -R 775 /var/www/blendsk
+# Étape 3 : Copier le reste du code
+COPY . .
+
+# Étape 4 : Finaliser l'installation
+RUN composer dump-autoload --optimize && \
+    chmod -R 775 var/
 
 EXPOSE 9000
 
