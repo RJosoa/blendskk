@@ -29,8 +29,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: blendsk
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     volumes:
       - database_data:/var/lib/mysql
     ports:
