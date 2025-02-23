@@ -41,8 +41,8 @@ services:
       timeout: 10s
       retries: 5
 
-  sonarqube:
-    image: sonarqube:lts
+  sonar:
+    image: sonarqube:community
     container_name: blendsk_sonar
     restart: always
     ports:
@@ -52,9 +52,9 @@ services:
       SONARQUBE_JDBC_USERNAME: sonar
       SONARQUBE_JDBC_PASSWORD: sonar
     depends_on:
-      - sonarqube-db
+      - sonar-db
 
-  sonarqube-db:
+  sonar-db:
     image: postgres:latest
     container_name: blendsk_sonar_db
     restart: always
@@ -63,8 +63,8 @@ services:
       POSTGRES_PASSWORD: sonar
       POSTGRES_DB: sonar
     volumes:
-      - sonarqube_data:/var/lib/postgresql/data
+      - sonar_data:/var/lib/postgresql/data
 
 volumes:
   database_data:
-  sonarqube_data:
+  sonar_data:
