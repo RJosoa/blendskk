@@ -1,5 +1,4 @@
 /node_modules
-/vendor
 .git
 .gitignore
 .idea
@@ -8,7 +7,6 @@
 *.md
 storage/*.key
 docker-compose.yml
-compose.yaml
 dockerfile
 .dockerignore
 tests
