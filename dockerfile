@@ -13,14 +13,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/blendsk
 
-# Copier le code source dans le container
-COPY . .
+# Copier le code source dans le conteneur en définissant le propriétaire
+COPY --chown=www-data:www-data . .
 
 # Installer les dépendances PHP/Symfony
 RUN composer install --no-interaction --prefer-dist
 
-RUN chmod -R 777 /var/www/blendsk \
-    chown -R www-data:www-data /var/www/blendsk
+# Ajuster les permissions
+RUN chmod -R 775 /var/www/blendsk
 
 EXPOSE 9000
 
