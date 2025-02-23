@@ -1,5 +1,7 @@
 FROM php:8.2-fpm
 
+USER root
+
 # Installer les dépendances système et l'extension pdo_mysql pour Symfony/MySQL
 RUN apt-get update && apt-get install -y \
     libonig-dev \
