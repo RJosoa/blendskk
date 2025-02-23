@@ -65,6 +65,23 @@ services:
     volumes:
       - sonar_data:/var/lib/postgresql/data
 
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: blendsk_jenkins
+    restart: always
+    privileged: true
+    user: root
+    ports:
+      - "8082:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+      - JENKINS_OPTS=--prefix=/jenkins
+
 volumes:
   database_data:
   sonar_data:
+  jenkins_home:
