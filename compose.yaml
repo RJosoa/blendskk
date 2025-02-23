@@ -2,31 +2,46 @@ services:
   app:
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     container_name: blendsk_app
-    ports:
-      - "80:80"
     volumes:
-      - .:/var/www/html
-    depends_on:
-      - database
+      - .:/var/www/blendsk
     environment:
-      DATABASE_URL: "mysql://root:root@db:3306/blendsk?serverVersion=8.0.32&charset=utf8mb4"
-    restart: unless-stopped
+      DATABASE_URL: "mysql://root:root@mysql:3306/blendsk?serverVersion=8.0"
+    ports:
+      - "9000:9000"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    container_name: blendsk_nginx
+    volumes:
+      - .:/var/www/blendsk
+      - ./symfony-docker/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
 
   database:
     image: mysql:8.0
-    restart: always
-    container_name: blendsk_db
+    container_name: blendsk_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: blendsk
       MYSQL_USER: root
       MYSQL_PASSWORD: root
+    volumes:
+      - database_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
 volumes:
-  mysql_data:
+  database_data:
