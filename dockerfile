@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    && docker-php-ext-install pdo pdo_mysql
+ && docker-php-ext-install pdo pdo_mysql
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -19,8 +19,8 @@ COPY . .
 # Installer les dépendances PHP/Symfony
 RUN composer install --no-interaction --prefer-dist
 
-RUN chown www-data:www-data /var/www/blendsk/.env \
-    chmod 644 /var/www/blendsk/.env
+RUN chmod -R 777 /var/www/blendsk \
+    chown -R www-data:www-data /var/www/blendsk
 
 EXPOSE 9000
 
