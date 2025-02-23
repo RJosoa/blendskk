@@ -6,8 +6,6 @@ services:
     container_name: blendsk_app
     volumes:
       - .:/var/www/blendsk
-    environment:
-      DATABASE_URL: "mysql://root:root@mysql:3306/blendsk?serverVersion=8.0"
     ports:
       - "9000:9000"
     depends_on:
