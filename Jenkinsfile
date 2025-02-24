@@ -1,36 +1,35 @@
 pipeline {
-  agent any
-  environment {
-    DOCKER_IMAGE = 'josoa/blendsk'
-    DOCKER_TAG   = 'latest'
-
-    COMPOSE_FILE = '/var/www/blendsk/compose.yaml'
-  }
-  stages {
-    stage('Checkout') {
-      steps {
-        git credentialsId: 'github-token', branch: 'main', url: 'https://github.com/RJosoa/blendskk.git'
-        checkout scm
-      }
+    agent any
+    environment {
+        COMPOSE_FILE = 'compose.yaml'
     }
-    stage('Build Docker Image') {
-      steps {
-        sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f Dockerfile ."
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                // Remplacez l'URL par celle de votre dépôt
+                 git credentialsId: 'github-token', branch: 'main', url: 'https://github.com/RJosoa/blendskk.git'
+            }
+        }
+        stage('Déploiement') {
+            steps {
+                script {
+                    // Arrête et supprime les containers existants
+                    sh 'docker-compose down'
+                    // Démarre les containers en arrière-plan
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+        stage('Installation des dépendances') {
+            steps {
+                // Exécute composer install dans le container "app"
+                sh 'docker-compose exec app composer install --no-dev --optimize-autoloader'
+            }
+        }
     }
-    stage('Deploy') {
-      steps {
-        sh "docker compose -f ${COMPOSE_FILE} down"
-        sh "docker compose -f ${COMPOSE_FILE} up -d"
-      }
+    post {
+        always {
+            echo "Pipeline de déploiement terminé."
+        }
     }
-  }
-  post {
-    success {
-      echo 'Déploiement effectué avec succès.'
-    }
-    failure {
-      echo 'Échec du déploiement. Consultez les logs pour plus d\'informations.'
-    }
-  }
 }
