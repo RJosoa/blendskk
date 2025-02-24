@@ -18,6 +18,10 @@ WORKDIR /var/www/blendsk
 # Copier le code source dans le container
 COPY . .
 
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
+
 # Installer les dépendances PHP/Symfony
 RUN composer install --no-interaction --prefer-dist
 
