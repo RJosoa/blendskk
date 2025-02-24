@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/RJosoa/blendskk.git'
+                git branch: 'main', url: 'https://github.com/RJosoa/blendskk.git'
             }
         }
 
