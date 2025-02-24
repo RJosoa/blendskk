@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Installation des dépendances système
+# Installer les dépendances système et l'extension pdo_mysql pour Symfony/MySQL
 RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
@@ -8,28 +8,24 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    && docker-php-ext-install pdo pdo_mysql zip opcache \
-    && docker-php-ext-configure opcache --enable-opcache
+    && docker-php-ext-install pdo pdo_mysql
 
-# Configuration PHP pour la production
-COPY symfony-docker/docker/php/php.ini /usr/local/etc/php/conf.d/app.ini
-
-# Installation de Composer
+# Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/blendsk
 
-# Copie des fichiers du projet
+
+# Copier le code source dans le container
 COPY . .
 
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
-# Installation des dépendances
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+# Installer les dépendances PHP/Symfony
+RUN composer install --no-interaction --prefer-dist
 
-# Permissions
-RUN chown -R www-data:www-data var
+RUN chown -R www-data:www-data /var/www/blendsk
 
 EXPOSE 9000
 
