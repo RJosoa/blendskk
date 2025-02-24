@@ -1,6 +1,6 @@
-vendor/
-var/
 .git/
-.env.local
-.env.*.local
-.dockerignore
+docker-compose.yml
+.env
+docker/
+var/
+Jenkinsfile
