@@ -7,8 +7,6 @@ services:
     image: josoa/blendsk:latest
     volumes:
       - blendsk_var:/var/www/blendsk/var
-    environment:
-      DATABASE_URL: "mysql://root:root@database:3306/blendsk?serverVersion=8.0"
     ports:
       - "9000:9000"
     depends_on:
