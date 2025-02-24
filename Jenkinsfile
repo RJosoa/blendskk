@@ -10,7 +10,6 @@ pipeline {
 
         stage('Build & Deploy') {
             steps {
-                sh 'cp .env.example .env'
                 sh 'docker compose down'
                 sh 'docker compose up -d --build'
             }
