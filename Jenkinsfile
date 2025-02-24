@@ -20,6 +20,7 @@ pipeline {
 
         stage('Update Code') {
             steps {
+                sh 'mkdir -p /var/www/blendsk/' 
                 sh 'rm -rf $APP_PATH/*'
                 sh 'cp -r * $APP_PATH/'
             }
