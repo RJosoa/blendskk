@@ -21,6 +21,7 @@ COPY . .
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
+RUN composer dump-env prod
 
 # Installer les dépendances PHP/Symfony
 RUN composer install --no-interaction --prefer-dist
