@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/RJosoa/blendskk.git'
+                git credentialsId: 'github-token', branch: 'main', url: 'https://github.com/RJosoa/blendskk.git'
             }
         }
 
