@@ -1,9 +1,14 @@
 services:
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: blendsk_app
     image: josoa/blendsk:latest
     volumes:
-      - /var/www/blendsk:/var/www/blendsk:ro
+      - .:/var/www/blendsk
+      - /var/www/blendsk/vendor/
+      - /var/www/blendsk/var/
     ports:
       - "9000:9000"
     depends_on:
@@ -14,8 +19,8 @@ services:
     image: nginx:latest
     container_name: blendsk_nginx
     volumes:
-      - /var/www/blendsk:/var/www/blendsk:ro
-      - ./symfony-docker/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - .:/var/www/blendsk
+      - ./symfony-docker/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8080:80"
     depends_on:
@@ -37,6 +42,30 @@ services:
       timeout: 10s
       retries: 5
 
+  sonar:
+    image: sonarqube:community
+    container_name: blendsk_sonar
+    restart: always
+    ports:
+      - "9001:9000"
+    environment:
+      SONARQUBE_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+      SONARQUBE_JDBC_USERNAME: sonar
+      SONARQUBE_JDBC_PASSWORD: sonar
+    depends_on:
+      - sonar-db
+
+  sonar-db:
+    image: postgres:latest
+    container_name: blendsk_sonar_db
+    restart: always
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonar
+    volumes:
+      - sonar_data:/var/lib/postgresql/data
+
   jenkins:
     image: jenkins/jenkins:lts-jdk17
     container_name: blendsk_jenkins
@@ -49,12 +78,10 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
-      - /usr/libexec/docker:/usr/libexec/docker
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
 
-
 volumes:
   database_data:
+  sonar_data:
   jenkins_home:
