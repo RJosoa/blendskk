@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: blendsk_app
+    image: josoa/blendsk:latest
     volumes:
       - .:/var/www/blendsk
       - /var/www/blendsk/vendor/
@@ -77,6 +78,8 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JENKINS_OPTS=--prefix=/jenkins
 
 volumes:
   database_data:
