@@ -14,7 +14,7 @@ pipeline {
 
         stage('Stop Application') {
             steps {
-                sh 'docker-compose down'
+                sh 'docker compose down'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
 
         stage('Restart Application') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker compose up -d'
             }
         }
 
