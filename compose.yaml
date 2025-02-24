@@ -76,12 +76,20 @@ services:
       - "8082:8080"
       - "50000:50000"
     volumes:
-    - jenkins_home:/var/jenkins_home
-    - /var/run/docker.sock:/var/run/docker.sock 
-    - /usr/bin/docker:/usr/bin/docker
-    - /usr/libexec/docker:/usr/libexec/docker
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /usr/libexec/docker:/usr/libexec/docker
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
+    entrypoint: >
+      /bin/bash -c "
+        apt update &&
+        apt install -y php-cli unzip curl &&
+        curl -sS https://getcomposer.org/installer | php &&
+        mv composer.phar /usr/local/bin/composer &&
+        exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
+      "
 
 volumes:
   database_data:
