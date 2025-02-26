@@ -10,7 +10,7 @@ final class AwardController extends AbstractController{
     #[Route('/award', name: 'app_award')]
     public function index(): Response
     {
-        return $this->render('frontend/award/index.html.twig', [
+        return $this->render('award/index.html.twig', [
             'controller_name' => 'Frontend/AwardController',
         ]);
     }

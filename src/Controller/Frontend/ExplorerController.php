@@ -10,7 +10,7 @@ final class ExplorerController extends AbstractController{
     #[Route('/explorer', name: 'app_explorer')]
     public function index(): Response
     {
-        return $this->render('frontend/explorer/index.html.twig', [
+        return $this->render('explorer/index.html.twig', [
             'controller_name' => 'Frontend/ExplorerController',
         ]);
     }
