@@ -17,19 +17,9 @@ class CommentsType extends AbstractType
         $builder
             ->add('content')
             ->add('report')
-            ->add('createdAt', null, [
-                'widget' => 'single_text'
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text'
-            ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'id',
-            ])
             ->add('post', EntityType::class, [
                 'class' => Posts::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }
