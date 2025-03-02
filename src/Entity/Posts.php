@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: PostsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -15,56 +17,66 @@ class Posts
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['posts', 'comments'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['posts'])]
     private ?string $featureImage = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['posts', 'comments'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['posts'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['posts'])]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[ORM\Column]
+    #[Groups(['posts'])]
     private ?bool $report = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['posts'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['posts'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['posts'])]
     private ?Categories $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['posts'])]
     private ?User $user = null;
 
     /**
      * @var Collection<int, Likes>
      */
-    #[ORM\OneToMany(targetEntity: Likes::class, mappedBy: 'post')]
+    #[ORM\OneToMany(targetEntity: Likes::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $likes;
 
     /**
      * @var Collection<int, Favorites>
      */
-    #[ORM\OneToMany(targetEntity: Favorites::class, mappedBy: 'post')]
+    #[ORM\OneToMany(targetEntity: Favorites::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $favorites;
 
     /**
      * @var Collection<int, Comments>
      */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'post')]
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $comments;
 
     public function __construct()
@@ -185,6 +197,17 @@ class Posts
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if (empty($this->slug) || $this->slug === null) {
+            $slugger = new AsciiSlugger();
+            $this->slug = $slugger->slug($this->title)->lower()->toString();
+        }
     }
 
     public function getCategory(): ?Categories
