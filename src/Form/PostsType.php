@@ -2,12 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\Post;
+use App\Entity\Categories;
+use App\Entity\Posts;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PostType extends AbstractType
+class PostsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -16,15 +19,18 @@ class PostType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('content')
-            ->add('slug')
             ->add('report')
+            ->add('category', EntityType::class, [
+                'class' => Categories::class,
+                'choice_label' => 'id',
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Post::class,
+            'data_class' => Posts::class,
         ]);
     }
 }
