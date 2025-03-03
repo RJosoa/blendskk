@@ -1,0 +1,78 @@
+<footer class="bg-white py-6 border-t mt-auto">
+  <div class="container mx-auto px-5 w-full">
+    <!-- Desktop Footer (hidden on mobile) -->
+    <div class="hidden md:flex justify-between items-start">
+      <!-- Logo and tagline -->
+      <div class="flex flex-col items-start">
+        <a href="{{ path('app_home') }}" class="mb-2">
+          <img src="{{ asset('img/dark_logo.svg') }}" alt="Blendsk Logo" width="40" class="w-8" />
+        </a>
+        <p class="text-sm text-gray-500 mt-2">Personalize your desktop experience</p>
+      </div>
+
+      <!-- Navigation links -->
+      <div class="flex gap-20">
+        <div>
+          <h3 class="font-semibold mb-3">Explore</h3>
+          <ul class="space-y-2">
+            <li><a href="{{ path('app_explorer') }}" class="text-sm text-gray-600 hover:text-gray-900">Explorer</a></li>
+            <li><a href="{{ path('app_award') }}" class="text-sm text-gray-600 hover:text-gray-900">Award</a></li>
+            <li><a href="{{ path('app_tips') }}" class="text-sm text-gray-600 hover:text-gray-900">Tips</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-semibold mb-3">Account</h3>
+          <ul class="space-y-2">
+            {% if app.user %}
+              <li><a href="{{ path('app_profile', {'id': app.user.id}) }}" class="text-sm text-gray-600 hover:text-gray-900">Profile</a></li>
+              <li><a href="{{ path('app_posts_new') }}" class="text-sm text-gray-600 hover:text-gray-900">New Post</a></li>
+              <li><a href="{{ path('app_logout') }}" class="text-sm text-gray-600 hover:text-gray-900">Logout</a></li>
+            {% else %}
+              <li><a href="{{ path('app_login') }}" class="text-sm text-gray-600 hover:text-gray-900">Sign In</a></li>
+              <li><a href="{{ path('app_register') }}" class="text-sm text-gray-600 hover:text-gray-900">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Footer (hidden on desktop) -->
+    <div class="md:hidden space-y-6">
+      <div class="flex justify-center mb-4">
+        <a href="{{ path('app_home') }}">
+          <img src="{{ asset('img/dark_logo.svg') }}" alt="Blendsk Logo" width="40" class="w-8" />
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-semibold mb-2 text-center">Explore</h3>
+          <ul class="space-y-2 text-center">
+            <li><a href="{{ path('app_explorer') }}" class="text-sm text-gray-600">Explorer</a></li>
+            <li><a href="{{ path('app_award') }}" class="text-sm text-gray-600">Award</a></li>
+            <li><a href="{{ path('app_tips') }}" class="text-sm text-gray-600">Tips</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-semibold mb-2 text-center">Account</h3>
+          <ul class="space-y-2 text-center">
+            {% if app.user %}
+              <li><a href="{{ path('app_profile', {'id': app.user.id}) }}" class="text-sm text-gray-600">Profile</a></li>
+              <li><a href="{{ path('app_logout') }}" class="text-sm text-gray-600">Logout</a></li>
+            {% else %}
+              <li><a href="{{ path('app_login') }}" class="text-sm text-gray-600">Sign In</a></li>
+              <li><a href="{{ path('app_register') }}" class="text-sm text-gray-600">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright - Both mobile and desktop -->
+    <div class="border-t mt-6 pt-6 text-center md:text-left">
+      <p class="text-sm text-gray-500">&copy; {{ "now"|date("Y") }} Blendsk. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
