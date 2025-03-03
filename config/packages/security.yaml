@@ -47,13 +47,12 @@ security:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/api/, roles: ROLE_ADMIN }
     - { path: ^/api/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/posts$, roles: PUBLIC_ACCESS }
-    - { path: ^/posts/, roles: ROLE_USER }
+    - { path: ^/user, roles: ROLE_ADMIN }
+    - { path: ^/profile/, roles: ROLE_USER }
+    - { path: ^/settings/, roles: ROLE_USER }
     - { path: ^/comments$, roles: PUBLIC_ACCESS }
     - { path: ^/comments/, roles: ROLE_USER }
     - { path: ^/likes/, roles: ROLE_USER }
     - { path: ^/favorites/, roles: ROLE_USER }
     - { path: ^/profile/, roles: ROLE_USER }
     - { path: ^/settigns/, roles: ROLE_USER }
-    - { path: ^/login$/, roles: PUBLIC_ACCESS }
-    - { path: ^/register$/, roles: PUBLIC_ACCESS }
