@@ -45,7 +45,6 @@ final class PostsController extends AbstractController{
     }
 
     #[Route('/{id}', name: 'app_posts_show', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
     public function show(Posts $post): Response
     {
         return $this->render('posts/show.html.twig', [
