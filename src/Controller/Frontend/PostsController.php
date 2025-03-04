@@ -29,16 +29,6 @@ final class PostsController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_posts_show', methods: ['GET'])]
-    public function show(Posts $post, LikesRepository $likesRepository, FavoritesRepository $favoritesRepository): Response
-    {
-        return $this->render('posts/show.html.twig', [
-            'post' => $post,
-            'likesRepository' => $likesRepository,
-            'favoritesRepository' => $favoritesRepository
-        ]);
-    }
-
     #[Route('/new', name: 'app_posts_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -76,6 +66,16 @@ final class PostsController extends AbstractController{
         ]);
     }
 
+    #[Route('/{id}', name: 'app_posts_show', methods: ['GET'])]
+    public function show(Posts $post, LikesRepository $likesRepository, FavoritesRepository $favoritesRepository): Response
+    {
+        return $this->render('posts/show.html.twig', [
+            'post' => $post,
+            'likesRepository' => $likesRepository,
+            'favoritesRepository' => $favoritesRepository
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_posts_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
@@ -98,7 +98,7 @@ final class PostsController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}', name: 'app_posts_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_posts_delete', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
     {
@@ -111,5 +111,21 @@ final class PostsController extends AbstractController{
         }
 
         return $this->redirectToRoute('app_explorer', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/report', name: 'app_posts_report', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function report(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('report'.$post->getId(), $request->getPayload()->getString('_token'))) {
+            // Set the post as reported
+            $post->setReport(true);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'The post has been reported.');
+        }
+
+        // Redirect back to the post or another appropriate page
+        return $this->redirectToRoute('app_posts_show', ['id' => $post->getId()]);
     }
 }

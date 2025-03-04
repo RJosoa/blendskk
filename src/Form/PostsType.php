@@ -20,6 +20,7 @@ class PostsType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Entrez le titre',
+                    'rows' => 2
                 ]
             ])
             ->add('imageFile', FileType::class, [
@@ -46,10 +47,9 @@ class PostsType extends AbstractType
                     'placeholder' => 'Entrez le contenu',
                 ]
             ])
-            ->add('report')
             ->add('category', EntityType::class, [
                 'class' => Categories::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
         ;
     }
