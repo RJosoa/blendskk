@@ -3,101 +3,13 @@
 {% block title %}Posts{% endblock %}
 
 {% block body %}
-    <h1>Posts</h1>
+<article class="py-20 md:py-28 px-10 md:px-24 gap-10">
+    {{include('posts/_actions.html.twig')}}
+    {{include('posts/_show_details.html.twig')}}
+</article>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
-                <th>FeatureImage</th>
-                <td>{{ post.featureImage }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ post.description }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.content }}</td>
-            </tr>
-            <tr>
-                <th>Slug</th>
-                <td>{{ post.slug }}</td>
-            </tr>
-            <tr>
-                <th>Report</th>
-                <td>{{ post.report ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    {% if app.user and post.user == app.user %}
-        <a href="{{ path('app_posts_edit', {'id': post.id}) }}">edit</a>
-
-        {{ include('posts/_delete_form.html.twig') }}
-    {% endif %}
-
-    <div class="post-card" id="post-{{ post.id }}">
-        <button id="btn-like-{{ post.id }}"
-                data-post-id="{{ post.id }}"
-                class="like-button {{ likesRepository.hasUserLikedPost(post, app.user) ? 'text-red-500' : 'text-gray-500' }} bg-black w-full py-2 rounded-b-lg flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 512 512" fill="currentColor">
-                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
-            </svg>
-        </button>
-        <span id="like-count-{{ post.id }}">{{ likesRepository.countLikesByPost(post) }}</span>
-    </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const button = document.querySelector('.like-button');
 
-            button.addEventListener('click', (e) => {
-              const postId = button.dataset.postId;
-
-              fetch(`/post/${postId}/like`, {
-                method: 'POST',
-                headers: {
-                  'X-Requested-With': 'XMLHttpRequest'
-                }
-              })
-              .then(response => {
-                console.log("Response received", response.status);
-                return response.json();
-              })
-              .then(data => {
-                console.log("Data received", data);
-
-                const likeCountSpan = document.getElementById(`like-count-${postId}`);
-                likeCountSpan.textContent = data.likeCount;
-
-                if (data.liked) {
-                  button.classList.remove('text-gray-500');
-                  button.classList.add('text-red-500');
-                } else {
-                  button.classList.remove('text-red-500');
-                  button.classList.add('text-gray-500');
-                }
-              })
-              .catch(error => console.error('Error:', error));
-            });
-          });
-        </script>
 {% endblock %}

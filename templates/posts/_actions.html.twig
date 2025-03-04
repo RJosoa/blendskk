@@ -1,0 +1,73 @@
+<aside class="pb-4 md:sticky md:top-1/4 md:h-0 md:-right-8 flex md:flex-col md:items-end gap-2 text-white">
+    {{ include('posts/actions_btn/_like_button.html.twig') }}
+    {{ include('posts/actions_btn/_favorite_button.html.twig') }}
+    {% if app.user and post.user == app.user %}
+    {{ include('posts/actions_btn/_edit_button.html.twig') }}
+    {{ include('posts/actions_btn/_delete_form.html.twig') }}
+    {% endif %}
+
+</aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const likeButton = document.querySelector('.like-button');
+        const favoriteButton = document.querySelector('.favorite-button');
+
+        likeButton.addEventListener('click', (e) => {
+          const postId = likeButton.dataset.postId;
+
+          fetch(`/posts/${postId}/like`, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(response => {
+            console.log("Response received", response.status);
+            return response.json();
+          })
+          .then(data => {
+            console.log("Data received", data);
+
+            const likeCountSpan = document.getElementById(`like-count-${postId}`);
+            likeCountSpan.textContent = data.likeCount;
+
+            if (data.liked) {
+                likeButton.classList.remove('text-gray-500');
+                likeButton.classList.add('text-red-500');
+            } else {
+                likeButton.classList.remove('text-red-500');
+                likeButton.classList.add('text-gray-500');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+
+        favoriteButton.addEventListener('click', (e) => {
+          const postId = favoriteButton.dataset.postId;
+
+          fetch(`/posts/${postId}/favorite`, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(response => {
+            console.log("Response received", response.status);
+            return response.json();
+          })
+          .then(data => {
+            console.log("Data received", data);
+
+            if (data.favorited) {
+              favoriteButton.classList.remove('text-neutral-300');
+              favoriteButton.classList.add('text-amber-100');
+            } else {
+              favoriteButton.classList.remove('text-amber-100');
+              favoriteButton.classList.add('text-neutral-300');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
