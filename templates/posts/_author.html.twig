@@ -1,0 +1,8 @@
+<section class="p-2 group flex items-center bg-bk-light/40 rounded-full backdrop-blur-sm">
+  <p
+    class="w-12 h-12 bg-bk-light rounded-full flex items-center justify-center"
+  >
+    {{ post.user.username ? post.user.username|slice(0, 1)|upper : "U" }}
+  </p>
+  <p class="md:hidden group-hover:block px-5">{{ post.user.username }}</p>
+</section>
