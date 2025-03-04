@@ -1,48 +1,9 @@
-{% extends 'base.html.twig' %}
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-10 md:px-16">
+{% for post in posts %}
+{{ include('posts/_card.html.twig', {
+    'post': post,
+    'likesRepository': likesRepository
+}) }}
+{% endfor %}
+</section>
 
-{% block title %}Posts index{% endblock %}
-
-{% block body %}
-    <h1>Posts index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>FeatureImage</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Content</th>
-                <th>Slug</th>
-                <th>Report</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.featureImage }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.description }}</td>
-                <td>{{ post.content }}</td>
-                <td>{{ post.slug }}</td>
-                <td>{{ post.report ? 'Yes' : 'No' }}</td>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_posts_show', {'id': post.id}) }}">show</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_posts_new') }}">Create new</a>
-{% endblock %}
