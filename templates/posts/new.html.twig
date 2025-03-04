@@ -3,9 +3,13 @@
 {% block title %}New Posts{% endblock %}
 
 {% block body %}
+<section class="py-20 md:py-28 px-10 md:px-16">
     <h1>Create new Posts</h1>
 
     {{ include('posts/_form.html.twig') }}
 
     <a href="{{ path('app_posts_index') }}">back to list</a>
+
+</section>
+
 {% endblock %}
