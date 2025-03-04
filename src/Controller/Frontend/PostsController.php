@@ -4,6 +4,7 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Posts;
 use App\Form\PostsType;
+use App\Repository\FavoritesRepository;
 use App\Repository\LikesRepository;
 use App\Repository\PostsRepository;
 use Cloudinary\Cloudinary;
@@ -17,13 +18,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/posts')]
 final class PostsController extends AbstractController{
     #[Route(name: 'app_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository, LikesRepository $likesRepository): Response
+    public function index(PostsRepository $postsRepository, LikesRepository $likesRepository, FavoritesRepository $favoritesRepository): Response
     {
         $posts = $postsRepository->findAll();
 
         return $this->render('posts/index.html.twig', [
             'posts' => $posts,
-            'likesRepository' => $likesRepository
+            'likesRepository' => $likesRepository,
+            'favoritesRepository' => $favoritesRepository
+        ]);
+    }
+
+    #[Route('/{id}/show', name: 'app_posts_show', methods: ['GET'])]
+    public function show(Posts $post, LikesRepository $likesRepository, FavoritesRepository $favoritesRepository): Response
+    {
+        return $this->render('posts/show.html.twig', [
+            'post' => $post,
+            'likesRepository' => $likesRepository,
+            'favoritesRepository' => $favoritesRepository
         ]);
     }
 
@@ -64,17 +76,6 @@ final class PostsController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}', name: 'app_posts_show', methods: ['GET'])]
-    public function show(int $id, PostsRepository $postsRepository, LikesRepository $likesRepository): Response
-    {
-        $post = $postsRepository->find($id);
-
-        return $this->render('posts/show.html.twig', [
-            'post' => $post,
-            'likesRepository' => $likesRepository
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_posts_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
@@ -88,7 +89,7 @@ final class PostsController extends AbstractController{
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_posts_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_explorer', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('posts/edit.html.twig', [
@@ -109,6 +110,6 @@ final class PostsController extends AbstractController{
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_posts_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_explorer', [], Response::HTTP_SEE_OTHER);
     }
 }

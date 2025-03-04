@@ -3,61 +3,44 @@
 namespace  App\Controller\Frontend;
 
 use App\Entity\Favorites;
-use App\Form\FavoritesType;
+use App\Entity\Posts;
 use App\Repository\FavoritesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/favorites')]
-final class FavoritesController extends AbstractController{
-    #[Route(name: 'app_favorites_index', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
-    public function index(FavoritesRepository $favoritesRepository): Response
+#[IsGranted('ROLE_USER')]
+final class FavoritesController extends AbstractController
+{
+    #[Route('/posts/{id}/favorite', name: 'app_favorite_toggle', methods: ['POST'])]
+    public function toggleFavorite(Posts $post ,FavoritesRepository $favoritesRepository, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        return $this->render('favorites/index.html.twig', [
-            'favorites' => $favoritesRepository->findAll(),
-        ]);
-    }
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Not authenticated'], 403);
+        }
 
-    #[Route('/new', name: 'app_favorites_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_USER')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $favorite = new Favorites();
-        $favorite->setUser($this->getUser());
-        $form = $this->createForm(FavoritesType::class, $favorite);
-        $form->handleRequest($request);
+        $existingFavorite = $favoritesRepository->findOneBy(['post' => $post, 'user' => $user]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($existingFavorite) {
+            $entityManager->remove($existingFavorite);
+            $favorited = false;
+        } else {
+            $favorite = new Favorites();
+            $favorite->setPost($post);
+            $favorite->setUser($user);
             $entityManager->persist($favorite);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_favorites_index', [], Response::HTTP_SEE_OTHER);
+            $favorited = true;
         }
 
-        return $this->render('favorites/new.html.twig', [
-            'favorite' => $favorite,
-            'form' => $form,
+        $entityManager->flush();
+
+        return $this->json([
+            'favorited' => $favorited
         ]);
     }
 
-    #[Route('/{id}', name: 'app_favorites_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_USER')]
-    public function delete(Request $request, Favorites $favorite, EntityManagerInterface $entityManager): Response
-    {
-        if ($favorite->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('You can only delete your own favorite.');
-        }
-
-        if ($this->isCsrfTokenValid('delete'.$favorite->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($favorite);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_favorites_index', [], Response::HTTP_SEE_OTHER);
-    }
 }
