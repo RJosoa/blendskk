@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Likes;
+use App\Entity\Posts;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +18,22 @@ class LikesRepository extends ServiceEntityRepository
         parent::__construct($registry, Likes::class);
     }
 
-//    /**
-//     * @return Likes[] Returns an array of Likes objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('l.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function countLikesByPost(Posts $post): int
+    {
+        return (int) $this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.post = :post')
+            ->setParameter('post', $post)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-//    public function findOneBySomeField($value): ?Likes
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function hasUserLikedPost(Posts $post, User $user): bool
+    {
+        $like = $this->findOneBy([
+            'post' => $post,
+            'user' => $user,
+        ]);
+        return $like !== null;
+    }
 }
