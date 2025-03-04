@@ -1,0 +1,38 @@
+<article class="w-full flex flex-col gap-10">
+    <header class="flex flex-col md:items-center w-full gap-5 md:gap-20">
+        <div class="flex items-center">
+            {{include('posts/_author.html.twig', {profileFromShowPost: true})}}
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold">{{ post.title }}</h1>
+    </header>
+
+    <main class="w-full flex flex-col items-center gap-10">
+        <section class="description">
+            <p class="font-light text-lg md:text-2xl">{{ post.description }}</p>
+        </section>
+
+        <div class="w-full flex flex-col items-center gap-2">
+            <span class="self-start px-5 py-2 bg-gray-300 rounded-xl">
+                {{ post.category.name|default('Unknown') }}
+            </span>
+
+            <figure class="shadow-md rounded-2xl overflow-hidden h-[600px] w-full flex justify-center items-center">
+                <img
+                    src="{{ post.featureImage }}"
+                    alt="{{ post.title }}"
+                    class="object-cover w-full h-full"
+                    loading="lazy"
+                />
+            </figure>
+            <p class="self-end font-noto italic text-sm">
+                This article was created by
+                <span class="font-bold">{{ post.user.username|default('Unknown') }}</span> on
+                {{ post.createdAt|date('D d M Y') }}
+            </p>
+        </div>
+
+        <section class="content">
+            {{ post.content }}
+        </section>
+    </main>
+</article>

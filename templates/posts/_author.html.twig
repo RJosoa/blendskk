@@ -1,8 +1,13 @@
-<section class="p-2 group flex items-center bg-bk-light/40 rounded-full backdrop-blur-sm">
-  <p
-    class="w-12 h-12 bg-bk-light rounded-full flex items-center justify-center"
-  >
-    {{ post.user.username ? post.user.username|slice(0, 1)|upper : "U" }}
-  </p>
-  <p class="md:hidden group-hover:block px-5">{{ post.user.username }}</p>
+<section class="p-2 group flex items-center rounded-full backdrop-blur-sm {{ profileFromShowPost is defined and profileFromShowPost ? 'bg-black' : 'bg-white/40' }}">
+    <p class="w-12 h-12 rounded-full flex items-center justify-center bg-white">
+        {{ post.user.username|default('U')|slice(0, 1)|upper }}
+    </p>
+    <div class="flex flex-col text-white">
+        <p class="{{ profileFromShowPost is defined and profileFromShowPost ? 'block' : 'md:hidden group-hover:block' }} px-5 text-lg font-bold">
+            {{ post.user.username|default('Unknown') }}
+        </p>
+        {% if profileFromShowPost is defined and profileFromShowPost %}
+            <p class="font-noto text-sm px-5">Updated on {{ post.updatedAt|date('D d M Y') }}</p>
+        {% endif %}
+    </div>
 </section>
