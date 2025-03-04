@@ -3,11 +3,15 @@
 {% block title %}Edit Posts{% endblock %}
 
 {% block body %}
-    <h1>Edit Posts</h1>
+<a href="{{ path('app_posts_show', {id: post.id}) }}" class="absolute bg-black items-center justify-center flex h-12 w-12 left-0 ml-4 mt-4 rounded-lg shadow-lg text-white top-0">
+    <button class="text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+</a>
 
+<article class="py-20 md:py-28 px-10 md:px-24 gap-10">
     {{ include('posts/_form.html.twig', {'button_label': 'Update'}) }}
+</article>
 
-    <a href="{{ path('app_posts_index') }}">back to list</a>
 
-    {{ include('posts/_delete_form.html.twig') }}
 {% endblock %}
