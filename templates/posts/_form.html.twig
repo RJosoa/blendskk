@@ -1,4 +1,46 @@
-{{ form_start(form) }}
+{# {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{{ form_end(form) }} #}
+
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div class="mb-4">
+        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'block font-bold text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.title, {'attr': {'class': 'w-full px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500'}}) }}
+        {{ form_errors(form.title, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.imageFile, 'Featured Image', {'label_attr': {'class': 'block font-bold text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.imageFile, {'attr': {'class': 'w-full py-2 px-4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50'}}) }}
+        {{ form_errors(form.imageFile, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block font-bold text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'w-full px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500'}}) }}
+        {{ form_errors(form.description, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.content, 'Content', {'label_attr': {'class': 'block font-bold text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.content, {'attr': {'class': 'w-full px-4 py-2 rounded-md border border-gray-300 h-64 focus:ring focus:ring-blue-200 focus:border-blue-500'}}) }}
+        {{ form_errors(form.content, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.category, 'Category', {'label_attr': {'class': 'block font-bold text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.category, {'attr': {'class': 'w-full px-4 py-2 rounded-md border border-gray-300 focus:ring focus:ring-blue-200 focus:border-blue-500'}}) }}
+        {{ form_errors(form.category, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <div class="mb-4 flex items-center">
+        {{ form_widget(form.report, {'attr': {'class': 'mr-2 h-4 w-4 text-blue-600 rounded focus:ring-blue-500'}}) }}
+        {{ form_label(form.report, 'Report', {'label_attr': {'class': 'text-gray-700'}}) }}
+        {{ form_errors(form.report, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+    </div>
+
+    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors">
+        {{ button_label|default('Save') }}
+    </button>
+{{ form_end(form, {'render_rest': true}) }}

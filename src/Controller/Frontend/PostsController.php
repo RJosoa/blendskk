@@ -4,7 +4,9 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Posts;
 use App\Form\PostsType;
+use App\Repository\LikesRepository;
 use App\Repository\PostsRepository;
+use Cloudinary\Cloudinary;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +17,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/posts')]
 final class PostsController extends AbstractController{
     #[Route(name: 'app_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository): Response
+    public function index(PostsRepository $postsRepository, LikesRepository $likesRepository): Response
     {
+        $posts = $postsRepository->findAll();
+
         return $this->render('posts/index.html.twig', [
-            'posts' => $postsRepository->findAll(),
+            'posts' => $posts,
+            'likesRepository' => $likesRepository
         ]);
     }
 
@@ -32,10 +37,25 @@ final class PostsController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $cloudinary = new Cloudinary($_ENV['CLOUDINARY_URL']);
+
+                $folder = 'user/' . $this->getUser()->getId() . '/post';
+                $uploadResult = $cloudinary->uploadApi()->upload(
+                    $imageFile->getPathname(),
+                    ['folder' => $folder]
+                );
+
+                $secureUrl = $uploadResult['secure_url'];
+                $post->setFeatureImage($secureUrl);
+            }
+
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_posts_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_explorer', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('posts/new.html.twig', [
@@ -45,10 +65,13 @@ final class PostsController extends AbstractController{
     }
 
     #[Route('/{id}', name: 'app_posts_show', methods: ['GET'])]
-    public function show(Posts $post): Response
+    public function show(int $id, PostsRepository $postsRepository, LikesRepository $likesRepository): Response
     {
+        $post = $postsRepository->find($id);
+
         return $this->render('posts/show.html.twig', [
             'post' => $post,
+            'likesRepository' => $likesRepository
         ]);
     }
 
