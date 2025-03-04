@@ -4,21 +4,48 @@ namespace App\Form;
 
 use App\Entity\Categories;
 use App\Entity\Posts;
-use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class PostsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('featureImage')
-            ->add('title')
-            ->add('description')
-            ->add('content')
+            ->add('title', null, [
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Entrez le titre',
+                ]
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image (JPEG ou PNG)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '15M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image au format JPEG ou PNG',
+                    ])
+                ],
+            ])
+            ->add('description', null, [
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Entrez la description',
+                ]
+            ])
+            ->add('content', null, [
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Entrez le contenu',
+                ]
+            ])
             ->add('report')
             ->add('category', EntityType::class, [
                 'class' => Categories::class,
