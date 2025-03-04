@@ -17,7 +17,7 @@
     </head>
     <body class="flex flex-col">
         {% block navbar %}
-            {% if app.request.get('_route') not in ['app_login', 'app_register'] %}
+            {% if app.request.get('_route') not in ['app_login', 'app_register', 'app_posts_new', 'app_posts_edit'] %}
                 {% include 'navbar.html.twig' %}
             {% endif %}
         {% endblock %}
@@ -25,7 +25,7 @@
         {% block body %}{% endblock %}
 
         {% block footer %}
-            {% if app.request.get('_route') not in ['app_login', 'app_register'] %}
+            {% if app.request.get('_route') not in ['app_login', 'app_register', 'app_posts_new', 'app_posts_edit'] %}
                 {% include 'footer.html.twig' %}
             {% endif %}
         {% endblock %}
