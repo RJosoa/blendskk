@@ -1,41 +1,46 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Login - Secure Access to Your
+Account{% endblock %} {% block meta %}
+<meta
+  name="description"
+  content="Login to access your account securely. Join our workspace management platform."
+/>
 
-{% block title %}Log in!{% endblock %}
-
+{% endblock %}
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+<section class="min-h-screen min-w-full bg-bk flex flex-col justify-between">
+  <header class="absolute w-full flex p-5 justify-between items-center">
+    <a href="{{ path('app_home') }}">
+      <img
+        src="{{ asset('img/dark_logo.svg') }}"
+        alt="Company Logo"
+        class="w-10"
+        width="40"
+        height="40"
+      />
+    </a>
+    <span
+        class="mx-3 decoration-2 font-medium md:hidden"
+      >
+        <a href="{{ path('app_register') }}">Create your account here ></a>
+      </span>
+  </header>
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-            </div>
-        {% endif %}
+  <main class="w-full flex max-md:justify-center max-md:items-center flex-grow max-md:flex-col py-20 md:py-28 px-10 md:px-16 gap-10" >
+    <h1 class="md:w-1/4 text-6xl md:text-8xl font-bold">Sign in</h1>
+    <div class="md:w-3/4 flex justify-center items-center">
+      {{ include("security/_form.html.twig") }}
+    </div>
+  </main>
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+  <footer class="block w-full p-5 max-md:hidden">
+    <p>
+      No account yet? Join us to transform your workspace.
+      <span
+        class="mx-3 underline underline-offset-4 decoration-wavy decoration-2 font-medium"
+      >
+        <a href="{{ path('app_register') }}">Create your account</a>
+      </span>
+    </p>
+  </footer>
+</section>
 {% endblock %}
