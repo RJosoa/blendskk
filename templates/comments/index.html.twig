@@ -1,43 +1,42 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Comments index{% endblock %}
+<h2>Commentaires</h2>
 
-{% block body %}
-    <h1>Comments index</h1>
+{% if app.user %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>Report</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for comment in comments %}
-            <tr>
-                <td>{{ comment.id }}</td>
-                <td>{{ comment.content }}</td>
-                <td>{{ comment.report ? 'Yes' : 'No' }}</td>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ comment.updatedAt ? comment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    {% if app.user and comment.user == app.user %}
-                        <a href="{{ path('app_comments_edit', {'id': comment.id}) }}">edit</a>
-                        {{ include('comments/_delete_form.html.twig') }}
-                    {% endif %}
-                </td>
-            </tr>
+    <section class="comment-form">
+        <h3>Ajouter un commentaire</h3>
+        <form action="{{ path('app_comments_new', { id: post.id }) }}" method="post">
+            <textarea
+                name="content"
+                required
+                placeholder="Écrire votre commentaire"
+            ></textarea>
+            <button type="submit">Comment</button>
+        </form>
+    </section>
+
+    <section class="comments-list">
+        {% if post.comments|length > 0 %}
+            {% for comment in post.comments %}
+                <article class="comment">
+                    <header>
+                        <strong>{{ comment.user.username }}</strong> a commenté :
+                    </header>
+                    <p class="comment-content">{{ comment.content }}</p>
+                    <p class="comment-date">Posté le {{ comment.createdAt|date('d/m/Y H:i') }}</p>
+
+                    <div class="comment-actions">
+
+                        {% if app.user == comment.user or is_granted('ROLE_ADMIN') %}
+                        {{include('comments/_delete_form.html.twig', {'comment': comment})}}
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
         {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_comments_new') }}">Create new</a>
-{% endblock %}
+            <p>Aucun commentaire pour ce post.</p>
+        {% endif %}
+    </section>
+{% else %}
+    <p>Vous devez être connecté pour commenter.</p>
+{% endif %}
