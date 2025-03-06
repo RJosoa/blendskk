@@ -18,12 +18,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/posts')]
 final class PostsController extends AbstractController{
     #[Route(name: 'app_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository, LikesRepository $likesRepository, FavoritesRepository $favoritesRepository): Response
-    {
-        $posts = $postsRepository->findAll();
+    public function index(
+        PostsRepository $postsRepository,
+        LikesRepository $likesRepository,
+        FavoritesRepository $favoritesRepository,
+        Request $request
+    ): Response {
+        $page = $request->query->getInt('page', 1);
+
+        $paginatedPosts = $postsRepository->findPaginated($page, 12);
 
         return $this->render('posts/index.html.twig', [
-            'posts' => $posts,
+            'posts' => $paginatedPosts['data'],
+            'pagination' => [
+                'currentPage' => $paginatedPosts['currentPage'],
+                'totalPages' => $paginatedPosts['pageCount'],
+                'totalItems' => $paginatedPosts['totalItems'],
+                'limit' => $paginatedPosts['limit']
+            ],
             'likesRepository' => $likesRepository,
             'favoritesRepository' => $favoritesRepository
         ]);
@@ -39,7 +51,6 @@ final class PostsController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $imageFile */
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 $cloudinary = new Cloudinary($_ENV['CLOUDINARY_URL']);
