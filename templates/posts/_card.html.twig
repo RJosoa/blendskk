@@ -1,6 +1,7 @@
-<a href="{{ path('app_posts_show', { id: post.id }) }}" class="block no-underline">
+<a href="{{ path('app_posts_show', { id: post.id }) }}" class="flex w-full">
     <article
-        class="relative flex flex-col justify-between shadow-md rounded-[2.5rem] overflow-hidden bg-cover bg-center h-[650px] transition-transform hover:scale-[1.01]"
+        class="relative flex flex-col justify-between shadow-md rounded-[2.5rem] overflow-hidden bg-cover bg-center h-[670px] w-full xs:w-[350px] transition-transform hover:scale-[1.01] m-auto"
+
         style="background-image: url('{{ post.featureImage }}');"
     >
         <div class="absolute inset-0 post-card-overlay z-0"></div>
@@ -18,15 +19,15 @@
             <p class="text-sm font-medium px-4 py-1 bg-white/70 rounded-full w-max backdrop-blur-sm">
              {{ post.category ? post.category.name : "N/A" }}
             </p>
-            <h2 class="text-3xl font-black mb-2 text-white">
-                {{ post.title|length > 40 ? post.title|slice(0, 40) ~ '...' : post.title }}
+            <h2 class="text-3xl font-black mb-2 text-white line-clamp-3 text-wrap">
+                {{ post.title}}
             </h2>
-            <p class="mt-5">
-                {{ post.description|length > 100 ? post.description|slice(0, 100) ~ '...' : post.description }}
+            <p class="mt-4 line-clamp-4 text-wrap">
+                {{ post.description}}
             </p>
         </section>
-        <footer class="relative z-10">
-             <div class="flex gap-1 items-center p-4">
+        <footer class="relative z-10 w-full flex justify-between items-center p-4">
+             <div class="flex gap-2 items-center bg-white/70 px-4 py-2 w-fit rounded-full">
                     <div class="{{app.user and likesRepository.hasUserLikedPost(post, app.user) ? 'text-red-500' : 'text-neutral-300' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 512 512" fill="currentColor">
                                     <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
