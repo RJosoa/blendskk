@@ -4,6 +4,9 @@ namespace App\Controller\Frontend;
 
 use App\Entity\User;
 use App\Form\ProfileType;
+use App\Repository\FavoritesRepository;
+use App\Repository\LikesRepository;
+use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,12 +18,29 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/profile')]
 final class ProfileController extends AbstractController{
     #[Route('/{id}', name: 'app_profile')]
+    #[Route('/{id}/{tab}', name: 'app_profile_with_tab', requirements: ['tab' => 'created|liked|favorites'])]
     #[IsGranted('ROLE_USER')]
-    public function index(User $user): Response
-    {
+    public function index(
+        User $user,
+        PostsRepository $postsRepository,
+        LikesRepository $likesRepository,
+        FavoritesRepository $favoritesRepository,
+        ?string $tab = 'created'
+    ): Response {
+        $posts = match($tab) {
+            'created' => $postsRepository->findUserCreatedPosts($user->getId()),
+            'liked' => $postsRepository->findUserLikedPosts($user->getId()),
+            'favorites' => $postsRepository->findUserFavoritePosts($user->getId()),
+            default => $postsRepository->findUserCreatedPosts($user->getId()),
+        };
+
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'Frontend/ProfileController',
             'user' => $user,
+            'posts' => $posts,
+            'activeTab' => $tab,
+            'likesRepository' => $likesRepository,
+            'favoritesRepository' => $favoritesRepository
         ]);
     }
 
@@ -70,4 +90,8 @@ final class ProfileController extends AbstractController{
 
         return $this->redirectToRoute('app_explorer', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
 }
