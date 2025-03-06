@@ -1,23 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register - Create Your Account{% endblock %}
 
+{% block meta %}
+<meta name="description" content="Register to create your account and join our workspace management platform." />
+{% endblock %}
 {% block body %}
-    <h1>Register</h1>
+<section class="min-h-screen min-w-full bg-bk flex flex-col justify-between">
+  <header class="absolute w-full flex p-5 justify-between items-center">
+    <a href="{{ path('app_home') }}">
+      <img
+        src="{{ asset('img/dark_logo.svg') }}"
+        alt="Company Logo"
+        class="w-10"
+        width="40"
+        height="40"
+      />
+    </a>
+    <span
+        class="mx-3 decoration-2 font-medium md:hidden"
+      >
+        <a href="{{ path('app_login') }}">Login to your account here ></a>
+      </span>
+  </header>
 
-    {{ form_errors(registrationForm) }}
+  <main class="w-full flex max-md:justify-center max-md:items-center flex-grow max-md:flex-col py-20 md:py-28 px-10 md:px-16 gap-10" >
+    <h1 class="md:w-1/4 text-6xl md:text-8xl font-bold">Register</h1>
+    <div class="md:w-3/4 flex justify-center items-center">
+      {{ include("registration/_form.html.twig") }}
+    </div>
+  </main>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.confirmPassword, {
-            label: 'Confirm Password'
-        }) }}
-        {{ form_row(registrationForm.agree_terms) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+  <footer class="block w-full p-5 max-md:hidden">
+    <p>
+      Do you already have an account? Log in to find your personalised space.
+      <span class="mx-3 underline underline-offset-4 decoration-wavy decoration-2 font-medium">
+        <a href="{{ path('app_login') }}">Login to your account</a>
+      </span>
+    </p>
+  </footer>
+</section>
 {% endblock %}
