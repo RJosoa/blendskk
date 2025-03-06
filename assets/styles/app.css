@@ -5,6 +5,8 @@
     --font-doto: "Doto", sans-serif;
     --font-pacifico: "Pacifico", cursive;
     --font-noto: "Noto serif", serif;
+
+    --breakpoint-xs: 30rem;
 }
 
 body {
