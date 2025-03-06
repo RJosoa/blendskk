@@ -6,7 +6,6 @@ use App\Entity\Comments;
 use App\Entity\Posts;
 use App\Form\CommentsType;
 use App\Repository\CommentsRepository;
-use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
