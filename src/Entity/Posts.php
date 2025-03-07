@@ -36,7 +36,7 @@ class Posts
     #[Groups(['posts'])]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
     #[ORM\Column]
