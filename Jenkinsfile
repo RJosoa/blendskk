@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        // "NodeJS_14" est le nom de l'installation Node.js configurée dans Jenkins
+        nodejs 'NodeJS_14'
+    }
+
     environment {
         GIT_REPO = "https://github.com/RJosoa/blendskk.git"
         GIT_BRANCH = "main"
@@ -64,7 +69,21 @@ pipeline {
                 sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
             }
         }
+
+        // Add this stage before the 'Déploiement' stage
+        stage('Build frontend assets') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    // Install Node.js dependencies
+                    sh 'npm install'
+                    // Build the assets with Webpack Encore
+                    sh 'npm run build'
+                }
+            }
+        }
     }
+
+
 
     post {
         success {
