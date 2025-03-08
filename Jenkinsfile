@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_REPO = "https://github.com/RJosoa/blendskk.git"
         GIT_BRANCH = "main"
-        DEPLOY_DIR = "web002"
+        DEPLOY_DIR = "web008"
     }
 
     stages {
