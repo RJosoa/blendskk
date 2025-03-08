@@ -1,24 +1,38 @@
 <section class="form w-80 xs:w-96 flex flex-col gap-4 md:gap-6">
     <h3 class="text-2xl font-semibold">Register to Blendsk</h3>
 
-    {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-6'}}) }}
+    {# {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-6'}}) }} #}
+    {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-6', 'novalidate': 'novalidate'}}) }}
         {{ form_errors(registrationForm) }}
 
-        <label for="{{ registrationForm.username.vars.id }}">Username</label>
-        {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+        <div class="form-group">
+            <label for="{{ registrationForm.username.vars.id }}">Username</label>
+            {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+            <div class="text-red-500">{{ form_errors(registrationForm.username) }}</div>
+        </div>
 
-        <label for="{{ registrationForm.email.vars.id }}">Email</label>
-        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+        <div class="form-group">
+            <label for="{{ registrationForm.email.vars.id }}">Email</label>
+            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+            <div class="text-red-500">{{ form_errors(registrationForm.email) }}</div>
+        </div>
 
-        <label for="{{ registrationForm.plainPassword.vars.id }}">Password</label>
-        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+        <div class="form-group">
+            <label for="{{ registrationForm.plainPassword.vars.id }}">Password</label>
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+            <div class="text-red-500">{{ form_errors(registrationForm.plainPassword) }}</div>
+        </div>
 
-        <label for="{{ registrationForm.confirmPassword.vars.id }}">Confirm Password</label>
-        {{ form_widget(registrationForm.confirmPassword, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+        <div class="form-group">
+            <label for="{{ registrationForm.confirmPassword.vars.id }}">Confirm Password</label>
+            {{ form_widget(registrationForm.confirmPassword, {'attr': {'class': 'form-control w-full p-3 rounded-xl border border-gray-300 md:px-5 md:py-4'}}) }}
+            <div class="text-red-500">{{ form_errors(registrationForm.confirmPassword) }}</div>
+        </div>
 
         <div class="flex items-center gap-2">
             {{ form_widget(registrationForm.agree_terms) }}
             {{ form_label(registrationForm.agree_terms) }}
+            <div class="text-red-500">{{ form_errors(registrationForm.agree_terms) }}</div>
         </div>
 
         <button type="submit" class="btn btn-lg btn-primary w-full text-center text-white rounded-full overflow-hidden bg-black p-5">
