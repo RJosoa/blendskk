@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // "NodeJS_14" est le nom de l'installation Node.js configurée dans Jenkins
-        nodejs 'NodeJS_14'
-    }
-
     environment {
         GIT_REPO = "https://github.com/RJosoa/blendskk.git"
         GIT_BRANCH = "main"
