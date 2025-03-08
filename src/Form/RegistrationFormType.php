@@ -39,11 +39,11 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
-                    'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$',
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -54,8 +54,20 @@ class RegistrationFormType extends AbstractType
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/',
-                        'message' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+                        'pattern' => '/[a-z]+/',
+                        'message' => 'Password must contain at least one lowercase letter',
+                    ]),
+                    new Regex([
+                        'pattern' => '/[A-Z]+/',
+                        'message' => 'Password must contain at least one uppercase letter',
+                    ]),
+                    new Regex([
+                        'pattern' => '/\d+/',
+                        'message' => 'Password must contain at least one number',
+                    ]),
+                    new Regex([
+                        'pattern' => '/[^\w\d\s]+/',
+                        'message' => 'Password must contain at least one special character',
                     ]),
                 ],
             ])
