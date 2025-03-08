@@ -56,16 +56,16 @@ pipeline {
             }
         }
 
-        stage('Build frontend assets') {
-            steps {
-                dir("${DEPLOY_DIR}") {
-                    // Install Node.js dependencies
-                    sh 'npm install'
-                    // Build the assets with Webpack Encore
-                    sh 'npm run build'
-                }
-            }
-        }
+        // stage('Build frontend assets') {
+        //     steps {
+        //         dir("${DEPLOY_DIR}") {
+        //             // Install Node.js dependencies
+        //             sh 'npm install'
+        //             // Build the assets with Webpack Encore
+        //             sh 'npm run build'
+        //         }
+        //     }
+        // }
 
         stage('Déploiement') {
             steps {
