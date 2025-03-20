@@ -11,37 +11,37 @@ class LoginTest extends PantherTestCase
 {
     public function testUserCanLogin(): void
     {
-        // Create a test user first
-        $user = $this->createTestUser('user@test.com', 'UserTest1234*');
+        // Créer d'abord un utilisateur de test
+        $this->createTestUser('user@test.com', 'UserTest1234*');
 
-        // Start the browser
+        // Démarrer le navigateur
         $client = static::createPantherClient();
 
-        // Go to the login page
+        // Aller à la page de connexion
         $crawler = $client->request('GET', '/login');
 
-        // Fill out the login form with correct field names
+        // Remplir le formulaire de connexion avec les noms de champs corrects
         $form = $crawler->selectButton('Sign in')->form();
         $form['_username'] = 'user@test.com';
         $form['_password'] = 'UserTest1234*';
 
-        // Submit the form
+        // Soumettre le formulaire
         $client->submit($form);
 
-        // Wait a moment for the page to load
+        // Attendre un moment pour que la page se charge
         $client->waitFor('body');
 
-        // Take screenshot for debugging (uncomment if needed)
+        // Prendre une capture d'écran pour le débogage
         // $client->takeScreenshot('var/login-result.png');
 
-        // Check if we're redirected to the explorer page
+        // Vérifier si nous sommes redirigés vers la page explorer
         $currentUrl = $client->getCurrentURL();
-        $this->assertStringContainsString('/explorer', $currentUrl, 'Not redirected to explorer page after login');
+        $this->assertStringContainsString('/explorer', $currentUrl, 'Pas redirigé vers la page explorer après connexion');
 
-        // Check for the expected H1 text on explorer page
-        $this->assertSelectorTextContains('h1', 'Explore more.', 'Explorer page heading not found');
+        // Vérifier le texte H1 attendu sur la page explorer
+        $this->assertSelectorTextContains('h1', 'Explore more.', 'Titre de la page explorer non trouvé');
 
-        // Additional check - we should no longer be on the login page
+        // Vérification supplémentaire - nous ne devrions plus être sur la page de connexion
         $this->assertSelectorNotExists('form input[name="_username"]');
     }
 
@@ -51,7 +51,7 @@ class LoginTest extends PantherTestCase
         $entityManager = $container->get(EntityManagerInterface::class);
         $passwordHasher = $container->get(UserPasswordHasherInterface::class);
 
-        // Check if user already exists to avoid duplicates
+        // Vérifier si l'utilisateur existe déjà pour éviter les doublons
         $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
         if ($existingUser) {
             return $existingUser;
@@ -69,5 +69,4 @@ class LoginTest extends PantherTestCase
 
         return $user;
     }
-
 }
