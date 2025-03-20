@@ -26,25 +26,22 @@ pipeline {
             }
         }
 
-             stage('Configuration JWT') {
+        stage('Configuration JWT') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    // Create a minimal .env.local file first with database credentials
-                    script {
-                        def tempEnv = """
-                        APP_ENV=prod
-                        DATABASE_URL=mysql://root:routitop@127.0.0.1:3306/\${DEPLOY_DIR}?serverVersion=8.3.0&charset=utf8mb4
-                        """
-                        writeFile file: ".env.local", text: tempEnv
-                    }
-
-                    // Now create JWT keys
+                    // Create JWT directory
                     sh 'mkdir -p config/jwt'
-                    sh 'php bin/console lexik:jwt:generate-keypair --skip-if-exists --env=prod'
-                    sh 'chmod -R 644 config/jwt/*'
+
+                    // Generate keys directly with OpenSSL (with passphrase "blablabla")
+                    sh 'openssl genrsa -out config/jwt/private.pem -passout pass:blablabla 4096'
+                    sh 'openssl rsa -in config/jwt/private.pem -passin pass:blablabla -pubout -out config/jwt/public.pem'
+
+                    // Set permissions
+                    sh 'chmod 644 config/jwt/private.pem'
+                    sh 'chmod 644 config/jwt/public.pem'
                 }
             }
-        }
+            }
 
         stage('Configuration de base de test') {
             steps {
