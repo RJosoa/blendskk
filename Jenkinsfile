@@ -23,6 +23,14 @@ pipeline {
             }
         }
 
+        stage('Exécution des tests') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    sh 'bin/phpunit --testdox'
+                }
+            }
+        }
+
         stage('Configuration de l\'environnement') {
             steps {
                 script {
