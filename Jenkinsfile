@@ -5,6 +5,7 @@ pipeline {
         GIT_REPO = "https://github.com/RJosoa/blendskk.git"
         GIT_BRANCH = "main"
         DEPLOY_DIR = "web008"
+        TEST_DB_NAME = "web008_test"
     }
 
     stages {
@@ -19,6 +20,30 @@ pipeline {
             steps {
                 dir("${DEPLOY_DIR}") {
                     sh 'composer install --optimize-autoloader'
+                }
+            }
+        }
+
+        stage('Configuration de base de test') {
+            steps {
+                script {
+                    // Configure test environment
+                    def testEnv = """
+                    APP_ENV=test
+                    APP_SECRET=test_secret
+                    KERNEL_CLASS='App\\\\Kernel'
+                    SYMFONY_DEPRECATIONS_HELPER=999999
+                    DATABASE_URL=mysql://root:routitop@127.0.0.1:3306/${TEST_DB_NAME}?serverVersion=8.3.0&charset=utf8mb4
+                    """
+
+                    writeFile file: "${DEPLOY_DIR}/.env.test.local", text: testEnv
+
+                    // Create test database
+                    dir("${DEPLOY_DIR}") {
+                        sh 'php bin/console doctrine:database:drop --force --env=test || true'
+                        sh 'php bin/console doctrine:database:create --env=test'
+                        sh 'php bin/console doctrine:schema:create --env=test'
+                    }
                 }
             }
         }
