@@ -1,7 +1,8 @@
 <header class="absolute flex justify-between items-center w-full p-5 z-30">
     <!-- Logo -->
     <a href="{{ path('app_home') }}">
-        <img src="{{ asset('img/dark_logo.svg') }}" alt="Logo" width="50" class="w-10" />
+        <img src="{{ asset('img/dark_full_logo.svg') }}" alt="Logo" width="200" class="hidden md:block"/>
+        <img src="{{ asset('img/dark_logo.svg') }}" alt="Logo" width="50" class="md:hidden" />
     </a>
 
     <!-- Hamburger button (mobile only) -->
